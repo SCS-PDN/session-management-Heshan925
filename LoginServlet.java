@@ -5,15 +5,32 @@ import javax.servlet.http.*;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: Implement login logic
-        // 1. Get username & password from request
-        // 2. Validate credentials (hardcode a few users)
-        // 3. If valid:
-        //    - Create session
-        //    - Store username in cookie
-        //    - Redirect to DashboardServlet
-        // 4. If invalid, redirect back to login.html
+
+        String userName = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        
+        if ((userName.equals("student1") && password.equals("pass1")) ||
+                (userName.equals("student2") && password.equals("pass2"))) {
+
+
+            HttpSession session = request.getSession();
+            session.setAttribute("username", userName);
+
+
+            Cookie userCookie = new Cookie("username", userName);
+            userCookie.setMaxAge(60 * 60); 
+            response.addCookie(userCookie);
+
+
+            response.sendRedirect("DashboardServlet");
+        } else {
+
+            response.sendRedirect("login.html");
+        }
     }
 }
